@@ -1,0 +1,21 @@
+#pragma once
+
+// Generic Character Stats
+enum CHARACTER_STATS
+{
+	BASE_HP = 0,
+	EXTRA_HP,
+	HP,
+	BASE_ATK,
+	EXTRA_ATK,
+	ATK,
+	BASE_DEF,
+	EXTRA_DEF,
+	DEF,
+	BASE_SPD,
+	EXTRA_SPD,
+	SPD,
+	CRIT_RATE,
+	CRIT_DMG,
+	NUM_STATS
+};
