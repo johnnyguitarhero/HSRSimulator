@@ -35,12 +35,6 @@ int main()
 	init_pair(2, COLOR_CYAN, COLOR_BLACK);
 
 
-	//cout << "======================================" << endl;
-	//cout << "|                                    |" << endl;
-	//cout << "|     Honkai Star Rail Simulator     |" << endl;
-	//cout << "|                                    |" << endl;
-	//cout << "======================================" << endl;
-
 	// Add characters to the team
 	Team* pMyTeam = new Team();
 	pMyTeam->AddCharacter(new Huohuo());

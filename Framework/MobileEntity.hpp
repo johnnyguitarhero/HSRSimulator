@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #define DISTANCE 10000.0f
 
 class MobileEntity
