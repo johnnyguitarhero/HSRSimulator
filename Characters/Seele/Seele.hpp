@@ -13,8 +13,22 @@ public:
 
 	void UseBasicAtk(){}
 	void UseSkill()
-	{
+	{	
+		// Attack enemy
+		for (int i = 0; i < m_pTargetList.size(); i++)
+		{
+			//m_pTargetList[i]->m_curStats[CHARACTER_STATS::HP] -= 1.0f; // TODO: Set correct damage
+		}
+
+		// Buff herself
 		this->AddBuff(CHARACTER_STATS::SPD, 25.0f, 2, POST_TURN);
+
+		// Energy recharges
+		m_curEnergy = std::min(m_maxEnergy, m_curEnergy + ENERGY_RECHARGE_SKILL);
+		if (m_curEnergy == m_maxEnergy)
+		{
+			m_ultReady = true;
+		}
 	}
 	void UseUltimate(){}
 
@@ -23,6 +37,11 @@ private:
 	{
 		// Name
 		m_name = "Seele";
+
+		// Actions
+		m_actionTargetType[CHARACTER_ACTION::BASIC_ATTACK] = TARGET_TYPE::SINGLE_ENEMY;
+		m_actionTargetType[CHARACTER_ACTION::SKILL] = TARGET_TYPE::SINGLE_ENEMY;
+		m_actionTargetType[CHARACTER_ACTION::ULTIMATE] = TARGET_TYPE::SINGLE_ENEMY;
 
 		// Character Stats
 		m_stats =

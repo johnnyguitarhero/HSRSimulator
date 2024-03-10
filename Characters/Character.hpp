@@ -30,8 +30,11 @@ public:
 	{
 		m_curStats = std::vector<float>(CHARACTER_STATS::NUM_STATS, 0.0f);
 		m_stats = std::vector<float>(CHARACTER_STATS::NUM_STATS, 0.0f);
+		m_actionTargetType = std::vector<TARGET_TYPE>(CHARACTER_ACTION::NUM_ACTION_TYPE, (TARGET_TYPE)0);
 		m_curEnergy = 0.0f;
 		m_maxEnergy = 100.0f;
+		m_ultReady = false;
+		m_targeted = false;
 	}
 	~Character(){}
 
@@ -40,12 +43,30 @@ public:
 	virtual void UseUltimate() = 0;
 	virtual void InitCharacter() = 0;
 
+	// Get target number from action type
+	TARGET_TYPE GetTargetType(CHARACTER_ACTION type)
+	{
+		return m_actionTargetType[type];		
+	}
+	
+
 	// Target selection
-	std::vector<Character*> m_pTargetList;
 	Character* AddTarget(Character* p_tgtCharacter)
 	{
 		m_pTargetList.push_back(p_tgtCharacter);
 		return this;
+	}
+
+	// Being target
+	void SelectedAsTarget(bool targeted)
+	{
+		m_targeted = targeted;
+	}
+
+
+	bool IsTarget()
+	{
+		return m_targeted;
 	}
 
 	// Add buffs
@@ -98,18 +119,27 @@ public:
 		cur_speed = m_curStats[CHARACTER_STATS::SPD];
 	}
 
-	void DisplayStats()
+	std::string DisplayStats(CHARACTER_STATS stat)
 	{
-		std::cout << "               Cur speed = " << m_curStats[CHARACTER_STATS::SPD] << std::endl;
-		std::cout << "               Cur crit damage = " << m_curStats[CHARACTER_STATS::CRIT_DMG] << std::endl;
+		float percentage = m_curStats[stat] / m_stats[stat] * 10.0;
+		std::string output = "[         ]";
+		for (int i = 1; i < (int)percentage; i++)
+		{
+			output[i] = '=';
+		}
+		return output;
 	}
 
 protected:
 	std::vector<float> m_curStats; // Current character stats
 	std::vector<float> m_stats; // Character stats off battle
 	std::vector<Buff> m_buffList; // List of buffs
+	std::vector<TARGET_TYPE> m_actionTargetType; // Action type list
+	std::vector<Character*> m_pTargetList;
 	float m_curEnergy;
 	float m_maxEnergy;
+	bool m_ultReady;
+	bool m_targeted;
 
 private:
 	// Sort helper function

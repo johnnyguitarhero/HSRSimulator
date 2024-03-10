@@ -2,112 +2,60 @@
 //
 
 #include <iostream>
-#include <unordered_map>
-#include <vector>
-#include <algorithm>
+#include <thread>
+#include <chrono> // for std::chrono
 
-#include "MobileEntity.hpp"
+#include "Battle.hpp"
+#include "Team.hpp"
 #include "AllMobileEntities.hpp"
+#include "Curses.h"
 using namespace std;
+
+// Global variable
+Battle battle;
+
+// Function to be executed in the new thread
+void UpdateDrawing() 
+{
+	while (true) 
+	{
+		battle.DrawScreen();
+		std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Sleep for 1 second
+	}
+}
 
 int main()
 {
-	cout << "======================================" << endl;
-	cout << "|                                    |" << endl;
-	cout << "|     Honkai Star Rail Simulator     |" << endl;
-	cout << "|                                    |" << endl;
-	cout << "======================================" << endl;
-
-	// Create team, enemies and turn counter
-	unordered_map<string, MobileEntity*> mobileEntityMap;
-	vector<MobileEntity*> actionQueue;
-	actionQueue.push_back(new TurnCounter());
-	actionQueue.push_back(new Sparkle());
-	actionQueue.push_back(new Seele());
-	actionQueue.push_back(new Huohuo());
-
-	// Create name map for everything except the turn counter
-	for (int i = 1; i < actionQueue.size(); i++)
-	{
-		mobileEntityMap.insert({ actionQueue[i]->m_name, actionQueue[i] });
-	}
+	initscr();
+	cbreak();
+	keypad(stdscr, TRUE);
+	noecho();
+	start_color();
+	init_pair(1, COLOR_GREEN, COLOR_BLACK);
+	init_pair(2, COLOR_CYAN, COLOR_BLACK);
 
 
-	int turn = 2;
-	float timer = 0.0f;
-	while(turn>0)
-	{
-		// Sort the action queue
-		sort(actionQueue.begin(), actionQueue.end(), CompareTime());
+	//cout << "======================================" << endl;
+	//cout << "|                                    |" << endl;
+	//cout << "|     Honkai Star Rail Simulator     |" << endl;
+	//cout << "|                                    |" << endl;
+	//cout << "======================================" << endl;
 
-		// Top of the queue would be the current mobile entity
-		MobileEntity* currentMobileEntity = actionQueue[0];
-		float actionTime = currentMobileEntity->m_remainTime;
-		timer += actionTime;
+	// Add characters to the team
+	Team* pMyTeam = new Team();
+	pMyTeam->AddCharacter(new Huohuo());
+	pMyTeam->AddCharacter(new Seele());
+	pMyTeam->AddCharacter(new Sparkle());
 
-		// Other mobile entities advance forward
-		for (int i = 1; i < actionQueue.size(); i++)
-		{
-			MobileEntity* queuedMobileEntity = actionQueue[i];
-			queuedMobileEntity->m_distance -= queuedMobileEntity->cur_speed * actionTime;
-			queuedMobileEntity->m_remainTime = queuedMobileEntity->m_distance / queuedMobileEntity->cur_speed;
-		}
-		
-		printf("t = %6.2f     ", timer);
-		
-		// Current mobile entity moves
-		if (currentMobileEntity->m_name=="TurnCounter")
-		{
-			// If it's the turn counter
-			cout << "================" << endl;
-			dynamic_cast<TurnCounter*>(currentMobileEntity)->ResetCounter();
-			turn--;
-		}
-		else
-		{
-			// If it's characters
-			Character* curCh = dynamic_cast<Character*>(currentMobileEntity);
-			curCh->BuffEvents(PRE_TURN);
-			if (curCh->m_name == "Sparkle")
-			{
-				// User input or AI logic
-				curCh->AddTarget(dynamic_cast<Character*>(mobileEntityMap["Seele"]));
-				curCh->UseSkill();
-				cout << curCh->m_name << endl;
-				curCh->DisplayStats();
-			}
-			else if (curCh->m_name == "Seele")
-			{
-				// User input or AI logic
-				curCh->UseSkill();
-				cout << curCh->m_name << endl;
-				curCh->DisplayStats();
-			}
-			else if (curCh->m_name == "Huohuo")
-			{
-				// User input or AI logic
-				curCh->AddTarget(dynamic_cast<Character*>(mobileEntityMap["Seele"]))
-					 ->AddTarget(dynamic_cast<Character*>(mobileEntityMap["Sparkle"]))
-					 ->AddTarget(curCh);
-				curCh->UseUltimate();
-				cout << curCh->m_name << endl;
-				curCh->DisplayStats();
-			}
-			curCh->BuffEvents(POST_TURN);
-		}
-		
-		// Current mobile entity resets to the starting point
-		currentMobileEntity->Reset();
+	// Create a 2 turn battle
+	battle.InitBattle(pMyTeam, 2);
+	std::thread t(UpdateDrawing);
+	t.detach();
+	battle.MainBattle();
 
-	}
-
-
-	for (int i = 0; i < actionQueue.size(); i++)
-	{
-		delete actionQueue[i];
-	}
-
-
+	delete pMyTeam;
+	endwin();
+	system("pause");
 	return 0;
 }
 

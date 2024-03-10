@@ -31,6 +31,11 @@ private:
 		// Name
 		m_name = "Sparkle";
 
+		// Actions
+		m_actionTargetType[CHARACTER_ACTION::BASIC_ATTACK] = TARGET_TYPE::SINGLE_ENEMY;
+		m_actionTargetType[CHARACTER_ACTION::SKILL] = TARGET_TYPE::SINGLE_TEAMMATE;
+		m_actionTargetType[CHARACTER_ACTION::ULTIMATE] = TARGET_TYPE::AOE_TEAMMATE;
+
 		// Character Stats
 		m_stats =
 		{
