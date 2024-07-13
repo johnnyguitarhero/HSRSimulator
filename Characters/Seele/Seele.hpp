@@ -11,7 +11,11 @@ public:
 	}
 	~Seele(){}
 
-	void UseBasicAtk(){}
+	void UseBasicAtk()
+	{
+		Character::UseBasicAtk();
+	}
+
 	void UseSkill()
 	{	
 		// Attack enemy
@@ -22,21 +26,22 @@ public:
 
 		// Buff herself
 		this->AddBuff(CHARACTER_STATS::SPD, 25.0f, 2, POST_TURN);
-
-		// Energy recharges
-		m_curEnergy = std::min(m_maxEnergy, m_curEnergy + ENERGY_RECHARGE_SKILL);
-		if (m_curEnergy == m_maxEnergy)
-		{
-			m_ultReady = true;
-		}
+		
+		Character::UseSkill();
 	}
-	void UseUltimate(){}
+	void UseUltimate()
+	{
+		Character::UseUltimate();
+	}
 
 private:
 	void InitCharacter()
 	{
 		// Name
 		m_name = "Seele";
+
+		// Element Type
+		m_elementType = ELEMENT_TYPE::QUANTUM;
 
 		// Actions
 		m_actionTargetType[CHARACTER_ACTION::BASIC_ATTACK] = TARGET_TYPE::SINGLE_ENEMY;

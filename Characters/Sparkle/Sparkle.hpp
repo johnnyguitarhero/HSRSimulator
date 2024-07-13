@@ -11,7 +11,10 @@ public:
 	}
 	~Sparkle() {}
 
-	void UseBasicAtk() {}
+	void UseBasicAtk() 
+	{
+		Character::UseBasicAtk();
+	}
 	void UseSkill()
 	{
 		for (int i = 0; i < m_pTargetList.size(); i++)
@@ -22,14 +25,22 @@ public:
 		}
 
 		m_pTargetList.clear();
+
+		Character::UseSkill();
 	}
-	void UseUltimate() {}
+	void UseUltimate() 
+	{
+		Character::UseUltimate();
+	}
 
 private:
 	void InitCharacter()
 	{
 		// Name
 		m_name = "Sparkle";
+
+		// Element Type
+		m_elementType = ELEMENT_TYPE::QUANTUM;
 
 		// Actions
 		m_actionTargetType[CHARACTER_ACTION::BASIC_ATTACK] = TARGET_TYPE::SINGLE_ENEMY;

@@ -11,10 +11,18 @@ public:
 	}
 	~Huohuo() {}
 
-	void UseBasicAtk() {}
-	void UseSkill(){}
+	void UseBasicAtk() 
+	{
+		Character::UseBasicAtk();
+	}
+	void UseSkill()
+	{
+		Character::UseSkill();
+	}
 	void UseUltimate() 
 	{
+		Character::UseUltimate();
+
 		for (int i = 0; i < m_pTargetList.size(); i++)
 		{
 			m_pTargetList[i]->AddBuff(CHARACTER_STATS::SPD, 10.0f, 2, PRE_TURN);
@@ -28,6 +36,9 @@ private:
 	{
 		// Name
 		m_name = "Huohuo";
+
+		// Element Type
+		m_elementType = ELEMENT_TYPE::WIND;
 
 		// Actions
 		m_actionTargetType[CHARACTER_ACTION::BASIC_ATTACK] = TARGET_TYPE::SINGLE_ENEMY;

@@ -99,8 +99,18 @@ void Battle::MainBattle()
 					m_curActionSelection = (m_curActionSelection - 1 + 3) % 3;
 					break;
 				case '\n':
-					selectionMade = true;
-					break;
+				{
+					if ((curCh->UltReady() && m_curActionSelection==(int)CHARACTER_ACTION::ULTIMATE) || (m_curActionSelection< (int)CHARACTER_ACTION::ULTIMATE))
+					{
+						// only when ult is ready can you pick ult
+						selectionMade = true;
+						break;
+					}
+					else
+					{
+						// log: ult energy not full yet!
+					}
+				}
 				}
 			}
 
@@ -264,9 +274,14 @@ void Battle::DrawScreen()
 		if (m_pTeam->m_pCharacters[i]->IsTarget()) attroff(COLOR_PAIR(2));
 
 		// Draw HP
-		attron(COLOR_PAIR(1));
-		mvprintw(height - 4, 2 + i * 20, "%s", ("HP: " + m_pTeam->m_pCharacters[i]->DisplayStats(CHARACTER_STATS::HP)).c_str());
-		attroff(COLOR_PAIR(1));
+		mvprintw(height - 4, 6 + i * 20, "%s", ("HP: " + m_pTeam->m_pCharacters[i]->DisplayStats(CHARACTER_STATS::HP)).c_str());
+		
+
+		// Draw Energy
+		int colorCode = (int)m_pTeam->m_pCharacters[i]->GetElementType()+1;
+		attron(COLOR_PAIR(colorCode));
+		mvprintw(height - 5, 2 + i * 20, "%s", ("Energy: " + m_pTeam->m_pCharacters[i]->DisplayEnergy()).c_str());
+		attroff(COLOR_PAIR(colorCode));
 
 	}
 

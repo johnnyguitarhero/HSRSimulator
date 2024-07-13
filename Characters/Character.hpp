@@ -38,15 +38,41 @@ public:
 	}
 	~Character(){}
 
-	virtual void UseBasicAtk() = 0;
-	virtual void UseSkill() = 0;
-	virtual void UseUltimate() = 0;
+	virtual void UseBasicAtk()
+	{
+		m_curEnergy += ENERGY_RECHARGE_BASIC_ATK;
+		if(m_curEnergy>=m_maxEnergy)
+		{
+			m_curEnergy = m_maxEnergy;
+			m_ultReady = true;
+		}
+	}
+	virtual void UseSkill()
+	{
+		m_curEnergy += ENERGY_RECHARGE_SKILL;
+		if (m_curEnergy >= m_maxEnergy)
+		{
+			m_curEnergy = m_maxEnergy;
+			m_ultReady = true;
+		}
+	}
+	virtual void UseUltimate()
+	{
+		m_curEnergy = 0.0f;
+		m_ultReady = false;
+	}
 	virtual void InitCharacter() = 0;
 
 	// Get target number from action type
 	TARGET_TYPE GetTargetType(CHARACTER_ACTION type)
 	{
 		return m_actionTargetType[type];		
+	}
+
+	// Get element type
+	ELEMENT_TYPE GetElementType()
+	{
+		return m_elementType;
 	}
 	
 
@@ -88,6 +114,22 @@ public:
 		return output;
 	}
 
+	std::string DisplayEnergy()
+	{
+		float percentage = m_curEnergy / m_maxEnergy * 10.0;
+		std::string output = "[         ]";
+		for (int i = 1; i < (int)percentage; i++)
+		{
+			output[i] = '=';
+		}
+		return output;
+	}
+
+	bool UltReady()
+	{
+		return m_ultReady;
+	}
+
 	void BuffEvents(bool curTime);
 
 protected:
@@ -96,6 +138,7 @@ protected:
 	std::vector<Buff> m_buffList; // List of buffs
 	std::vector<TARGET_TYPE> m_actionTargetType; // Action type list
 	std::vector<Character*> m_pTargetList;
+	ELEMENT_TYPE m_elementType;
 	float m_curEnergy;
 	float m_maxEnergy;
 	bool m_ultReady;

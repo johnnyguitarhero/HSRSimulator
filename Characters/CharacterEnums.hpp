@@ -43,6 +43,20 @@ enum CHARACTER_ACTION
 	NUM_ACTION_TYPE
 };
 
+// Element Types
+// The order of element types matches the order of curse colors!
+enum ELEMENT_TYPE
+{
+	QUANTUM = 0,
+	WIND,
+	ICE,
+	FIRE,
+	LIGHTNING,
+	IMAGINARY,
+	PHYSICAL,
+	NUM_ELEMENT_TYPE
+};
+
 #define ENERGY_RECHARGE_SKILL 30.0f
 #define ENERGY_RECHARGE_BASIC_ATK 20.0f
 #define ENERGY_RECHARGE_ULT 5.0f
