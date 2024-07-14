@@ -9,6 +9,8 @@
 #include "TurnCounter.hpp"
 //#include "AllMobileEntities.hpp"
 
+class UserInterface;
+
 class Battle
 {
 public:
@@ -17,7 +19,8 @@ public:
 
 	void InitBattle(Team* pTeam, int turn);
 	void MainBattle();
-	void DrawScreen();	
+	//void DrawScreen();	
+	friend class UserInterface;
 
 private:
 	int m_turn; // Number of turns left in the battle

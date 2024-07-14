@@ -1,4 +1,5 @@
 #include "Battle.hpp"
+#include "Logger.hpp"
 
 Battle::Battle() : m_turn(0), m_timer(0.0f)
 {
@@ -82,6 +83,7 @@ void Battle::MainBattle()
 		{
 			// If it's characters
 			Character* curCh = dynamic_cast<Character*>(currentMobileEntity);
+			LOG_MSG("It's "+curCh->m_name+"'s turn", -1);
 			curCh->BuffEvents(PRE_TURN);
 
 			// Selection 1: Action
@@ -109,6 +111,7 @@ void Battle::MainBattle()
 					else
 					{
 						// log: ult energy not full yet!
+						LOG_MSG("Ult energy not full yet!", 90);
 					}
 				}
 				}
@@ -183,12 +186,15 @@ void Battle::MainBattle()
 			{
 			case CHARACTER_ACTION::BASIC_ATTACK:
 				curCh->UseBasicAtk();
+				LOG_MSG(curCh->m_name + " used basic attack", -1);
 				break;
 			case CHARACTER_ACTION::SKILL:
 				curCh->UseSkill();
+				LOG_MSG(curCh->m_name + " used skill", -1);
 				break;
 			case CHARACTER_ACTION::ULTIMATE:
 				curCh->UseUltimate();
+				LOG_MSG(curCh->m_name + " used ult", -1);
 			}
 
 			curCh->BuffEvents(POST_TURN);
@@ -200,91 +206,3 @@ void Battle::MainBattle()
 	}
 }
 
-/*
-* @brief Draw battle scene using curses
-* TODO: The draw screen function is not thread safe at all!!!
-*/
-void Battle::DrawScreen()
-{
-	clear();
-	int height, width;
-	getmaxyx(stdscr, height, width);
-
-	// Hide cursor
-	curs_set(0);
-
-	// Draw borders
-	for (int i = 0; i < height; i++) {
-		mvprintw(i, 0, "|");
-		mvprintw(i, width - 1, "|");
-	}
-	for (int i = 0; i < width; i++) {
-		mvprintw(0, i, "-");
-		mvprintw(height - 1, i, "-");
-	}
-
-	// Draw action queue
-	mvprintw(1, 2, "------------");
-	for (int i = 0; i < m_actionQueue.size(); i++)
-	{
-		if (m_actionQueue[i]->m_name == "TurnCounter")
-		{
-			mvprintw(2 + 2 * i, 2, "|%10d|", m_turn);
-		}
-		else
-		{
-			mvprintw(2 + 2 * i, 2, "|%10s|", m_actionQueue[i]->m_name.c_str());
-		}
-
-		mvprintw(3 + 2 * i, 2, "------------");
-	}
-
-	// Draw action menu
-	mvprintw(height - 10, width - 20, "Action Menu:");
-	std::vector<std::string> actions = { "Basic Attack", "Skill", "Ultimate" };
-	for (int i = 0; i < 3; i++)
-	{
-		if (i == m_curActionSelection)
-		{
-			mvprintw(height - 8 + i, width - 20, "> %s <", actions[i].c_str());
-		}
-		else
-		{
-			mvprintw(height - 8 + i, width - 20, "%s", actions[i].c_str());
-		}
-	}
-
-	// Draw enemy
-	mvprintw((height - 5) / 2 - 1, (width - 15) / 2, "/-^-\\");
-	mvprintw((height - 5) / 2, (width - 15) / 2 + 2, "Enemy");
-
-	// Draw Characters
-	for (int i = 0; i < m_pTeam->m_curTeamSize; i++)
-	{
-		// Draw Names/Pictures
-		if (m_pTeam->m_pCharacters[i]->IsTarget()) attron(COLOR_PAIR(2));
-		if (dynamic_cast<Character*>(m_actionQueue[0]) == m_pTeam->m_pCharacters[i])
-		{
-			mvprintw(height - 3, 2 + i * 20, "[%s]", m_pTeam->m_pCharacters[i]->m_name.c_str());
-		}
-		else
-		{
-			mvprintw(height - 3, 2 + i * 20, " %s ", m_pTeam->m_pCharacters[i]->m_name.c_str());
-		}
-		if (m_pTeam->m_pCharacters[i]->IsTarget()) attroff(COLOR_PAIR(2));
-
-		// Draw HP
-		mvprintw(height - 4, 6 + i * 20, "%s", ("HP: " + m_pTeam->m_pCharacters[i]->DisplayStats(CHARACTER_STATS::HP)).c_str());
-		
-
-		// Draw Energy
-		int colorCode = (int)m_pTeam->m_pCharacters[i]->GetElementType()+1;
-		attron(COLOR_PAIR(colorCode));
-		mvprintw(height - 5, 2 + i * 20, "%s", ("Energy: " + m_pTeam->m_pCharacters[i]->DisplayEnergy()).c_str());
-		attroff(COLOR_PAIR(colorCode));
-
-	}
-
-
-	refresh();
-}
