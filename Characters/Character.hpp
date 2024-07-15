@@ -8,6 +8,8 @@
 #define PRE_TURN true
 #define POST_TURN false
 
+class Team;
+
 struct Buff
 {
 	Buff(CHARACTER_STATS type, float percentage, int remainingTurns, bool buffChangeTime)
@@ -139,10 +141,13 @@ protected:
 	std::vector<TARGET_TYPE> m_actionTargetType; // Action type list
 	std::vector<Character*> m_pTargetList;
 	ELEMENT_TYPE m_elementType;
+	Team* m_pTeam;
 	float m_curEnergy;
 	float m_maxEnergy;
 	bool m_ultReady;
 	bool m_targeted;
+
+	friend Team;
 
 private:
 	// Sort helper function

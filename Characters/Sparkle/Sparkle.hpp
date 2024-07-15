@@ -31,6 +31,7 @@ public:
 	void UseUltimate() 
 	{
 		Character::UseUltimate();
+
 	}
 
 private:

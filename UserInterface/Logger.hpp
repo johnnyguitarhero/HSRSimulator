@@ -11,7 +11,7 @@ struct Message
 class Logger
 {
 public:
-	static Logger& getInstance() 
+	static Logger& GetInstance() 
 	{
 		static Logger instance;
 		return instance;
@@ -40,4 +40,4 @@ private:
 	ThreadSafeQueue<Message> m_msgQueue;
 };
 
-#define LOG_MSG(msg, expirationTime) Logger::getInstance().LogMsg(msg,expirationTime)
+#define LOG_MSG(msg, expirationTime) Logger::GetInstance().LogMsg(msg,expirationTime)

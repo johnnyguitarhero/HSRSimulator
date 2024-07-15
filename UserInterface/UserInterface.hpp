@@ -38,7 +38,11 @@ public:
 
 private:
 
+	int m_height;
+	int m_width;
+
 	void DisplayMessages();
+	void DisplayBattleInfo(Battle* battle);
 	std::vector<Message> m_onScreenMsg;
 
 };

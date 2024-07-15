@@ -186,10 +186,12 @@ void Battle::MainBattle()
 			{
 			case CHARACTER_ACTION::BASIC_ATTACK:
 				curCh->UseBasicAtk();
+				m_pTeam->m_curSkillPoints = std::min(m_pTeam->m_maxSkillPoints, m_pTeam->m_curSkillPoints + 1);
 				LOG_MSG(curCh->m_name + " used basic attack", -1);
 				break;
 			case CHARACTER_ACTION::SKILL:
 				curCh->UseSkill();
+				m_pTeam->m_curSkillPoints = std::max(0, m_pTeam->m_curSkillPoints - 1);
 				LOG_MSG(curCh->m_name + " used skill", -1);
 				break;
 			case CHARACTER_ACTION::ULTIMATE:

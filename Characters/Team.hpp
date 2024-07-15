@@ -31,6 +31,7 @@ public:
 		if (m_curTeamSize < m_maxTeamSize)
 		{
 			m_pCharacters.push_back(pCharacter);
+			pCharacter->m_pTeam = this;
 			m_curTeamSize++;
 			return true;
 		}
