@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "curses.h"
+#include "WindowsAPI.hpp"
 #include "Battle.hpp"
 #include "Logger.hpp"
 
@@ -15,6 +16,8 @@ public:
 	~UserInterface(){}
 	void InitUI()
 	{
+		SetConsoleEncoding();
+
 		initscr();
 		cbreak();
 		keypad(stdscr, TRUE);

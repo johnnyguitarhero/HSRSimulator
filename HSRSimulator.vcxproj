@@ -70,7 +70,7 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)lib;$(ProjectDir)Characters/Seele;$(ProjectDir)Characters/Sparkle;$(ProjectDir)Characters/Huohuo;$(ProjectDir)Characters;$(ProjectDir)Framework;$(ProjectDir);$(ProjectDir)UserInterface;$(ProjectDir)Utils;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)lib;$(ProjectDir)Characters/Seele;$(ProjectDir)Characters/Sparkle;$(ProjectDir)Characters/Huohuo;$(ProjectDir)Characters;$(ProjectDir)Framework;$(ProjectDir);$(ProjectDir)UserInterface;$(ProjectDir)Utils;$(ProjectDir)OS;$(IncludePath)</IncludePath>
     <OutDir>build\$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(ProjectDir)lib;$(LibraryPath)</LibraryPath>
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
@@ -113,6 +113,7 @@
     <ClCompile Include="Battle.cpp" />
     <ClCompile Include="Characters\Character.cpp" />
     <ClCompile Include="HSRSimulation.cpp" />
+    <ClCompile Include="OS\WindowsAPI.cpp" />
     <ClCompile Include="UserInterface\UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +127,7 @@
     <ClInclude Include="Characters\Team.hpp" />
     <ClInclude Include="framework\MobileEntity.hpp" />
     <ClInclude Include="framework\TurnCounter.hpp" />
+    <ClInclude Include="OS\WindowsAPI.hpp" />
     <ClInclude Include="UserInterface\Logger.hpp" />
     <ClInclude Include="UserInterface\UserInterface.hpp" />
     <ClInclude Include="Utils\ThreadSafeQueue.hpp" />
