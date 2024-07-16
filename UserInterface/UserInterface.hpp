@@ -10,7 +10,7 @@ class UserInterface
 {
 public:
 
-	static const int NUM_MSG = 10;
+	static const int NUM_MSG = 5;
 
 	UserInterface(){}
 	~UserInterface(){}
@@ -46,6 +46,17 @@ private:
 
 	void DisplayMessages();
 	void DisplayBattleInfo(Battle* battle);
+
+	std::string GenPercentageBar(float percent)
+	{
+		std::string output = "[         ] "+std::to_string((int)percent)+"%";
+		for (int i = 1; i < (int)(percent/10.0f); i++)
+		{
+			output[i] = '=';
+		}
+		return output;
+	}
+
 	std::vector<Message> m_onScreenMsg;
 
 };

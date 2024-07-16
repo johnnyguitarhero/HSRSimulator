@@ -1,4 +1,4 @@
-#include "UserInterface.hpp"
+﻿#include "UserInterface.hpp"
 
 /*
 * @brief Draw battle scene using curses
@@ -24,7 +24,7 @@ void UserInterface::DrawScreen(Battle* battle)
 
 	DisplayBattleInfo(battle);
 	DisplayMessages();
-
+	
 	refresh();
 }
 
@@ -47,23 +47,23 @@ void UserInterface::DisplayBattleInfo(Battle* battle)
 	}
 
 	// Draw action menu
-	mvprintw(m_height - 10, m_width - 20, "Action Menu:");
+	mvprintw(m_height - 21, 90, "Action Menu:");
 	std::vector<std::string> actions = { "Basic Attack", "Skill", "Ultimate" };
 	for (int i = 0; i < 3; i++)
 	{
 		if (i == battle->m_curActionSelection)
 		{
-			mvprintw(m_height - 8 + i, m_width - 20, "> %s <", actions[i].c_str());
+			mvprintw(m_height - 20 + i, 90, "> %s <", actions[i].c_str());
 		}
 		else
 		{
-			mvprintw(m_height - 8 + i, m_width - 20, "%s", actions[i].c_str());
+			mvprintw(m_height - 20 + i, 90, "%s", actions[i].c_str());
 		}
 	}
 
 
 	// Draw skill points
-	mvprintw(m_height - 4, m_width - 20, "Skill Points:");
+	mvprintw(m_height - 15, 90, "Skill Points:");
 	std::string skillPoints = "";
 	for (int i = 0; i < battle->m_pTeam->m_maxSkillPoints; i++)
 	{
@@ -76,11 +76,11 @@ void UserInterface::DisplayBattleInfo(Battle* battle)
 			skillPoints += 'O';
 		}		
 	}
-	mvprintw(m_height - 3, m_width - 20, skillPoints.c_str());
+	mvprintw(m_height - 14, 90, skillPoints.c_str());
 
 	// Draw enemy
-	mvprintw((m_height - 5) / 2 - 1, (m_width - 15) / 2, "/-^-\\");
-	mvprintw((m_height - 5) / 2, (m_width - 15) / 2 + 2, "Enemy");
+	mvprintw((m_height - 5) / 3 - 1, (m_width - 15) / 3, "/-^-\\");
+	mvprintw((m_height - 5) / 3, (m_width - 15) / 3 + 2, "Enemy");
 
 	// Draw Characters
 	for (int i = 0; i < battle->m_pTeam->m_curTeamSize; i++)
@@ -89,22 +89,22 @@ void UserInterface::DisplayBattleInfo(Battle* battle)
 		if (battle->m_pTeam->m_pCharacters[i]->IsTarget()) attron(COLOR_PAIR(2));
 		if (dynamic_cast<Character*>(battle->m_actionQueue[0]) == battle->m_pTeam->m_pCharacters[i])
 		{
-			mvprintw(m_height - 3, 2 + i * 20, "[%s]", battle->m_pTeam->m_pCharacters[i]->m_name.c_str());
+			mvprintw(m_height - 3, 2 + i * 25, "[%s]", battle->m_pTeam->m_pCharacters[i]->m_name.c_str());
 		}
 		else
 		{
-			mvprintw(m_height - 3, 2 + i * 20, " %s ", battle->m_pTeam->m_pCharacters[i]->m_name.c_str());
+			mvprintw(m_height - 3, 2 + i * 25, " %s ", battle->m_pTeam->m_pCharacters[i]->m_name.c_str());
 		}
 		if (battle->m_pTeam->m_pCharacters[i]->IsTarget()) attroff(COLOR_PAIR(2));
 
 		// Draw HP
-		mvprintw(m_height - 4, 6 + i * 20, "%s", ("HP: " + battle->m_pTeam->m_pCharacters[i]->DisplayStats(CHARACTER_STATS::HP)).c_str());
+		mvprintw(m_height - 4, 6 + i * 25, "%s", ("HP: " + GenPercentageBar(battle->m_pTeam->m_pCharacters[i]->GetStatsPercentage(CHARACTER_STATS::HP))).c_str());
 
 
 		// Draw Energy
 		int colorCode = (int)battle->m_pTeam->m_pCharacters[i]->GetElementType() + 1;
 		attron(COLOR_PAIR(colorCode));
-		mvprintw(m_height - 5, 2 + i * 20, "%s", ("Energy: " + battle->m_pTeam->m_pCharacters[i]->DisplayEnergy()).c_str());
+		mvprintw(m_height - 5, 2 + i * 25, "%s", ("Energy: " + GenPercentageBar(battle->m_pTeam->m_pCharacters[i]->GetEnergyPercentage())).c_str());
 		attroff(COLOR_PAIR(colorCode));
 
 	}
@@ -143,25 +143,30 @@ void UserInterface::DisplayMessages()
 	}
 
 	// Only keep 10 messages on the screen
+	// we'll keep as many permanent messages on the screen as possible
 	if (m_onScreenMsg.size() > UserInterface::NUM_MSG)
 	{
 		int removalIndex = 0;
-		// First see if there's any temporary messages
+		// First see if there's more than 1 temporary messages
+		int tempMsgCount = 0;
 		for (int i = 0; i < m_onScreenMsg.size(); i++)
 		{
 			if (m_onScreenMsg[i].expirationTime > 0)
-			{
-				removalIndex = i;
-				break;
+			{			
+				if(tempMsgCount==0) removalIndex = i; // remember the index of the first temp messsage
+				tempMsgCount++;
 			}
 		}
 
-		// if not, remove the top one
+		// if there's <=1 temp message, remove the top message
+		if (tempMsgCount <= 1) removalIndex = 0;
+
 		m_onScreenMsg.erase(m_onScreenMsg.begin()+removalIndex);
 	}
 
+	mvprintw(2, 90, "%s", "Logs:");
 	for (int i = 0; i < m_onScreenMsg.size(); i++)
 	{
-		mvprintw(i + 2, 80, "%s", m_onScreenMsg[i].msg.c_str());
+		mvprintw(i + 3, 90, "%s", m_onScreenMsg[i].msg.c_str());
 	}
 }

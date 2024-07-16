@@ -60,7 +60,7 @@ public:
 	}
 	virtual void UseUltimate()
 	{
-		m_curEnergy = 0.0f;
+		m_curEnergy = 5.0f;
 		m_ultReady = false;
 	}
 	virtual void InitCharacter() = 0;
@@ -105,26 +105,14 @@ public:
 
 	
 
-	std::string DisplayStats(CHARACTER_STATS stat)
+	float GetStatsPercentage(CHARACTER_STATS stat)
 	{
-		float percentage = m_curStats[stat] / m_stats[stat] * 10.0;
-		std::string output = "[         ]";
-		for (int i = 1; i < (int)percentage; i++)
-		{
-			output[i] = '=';
-		}
-		return output;
+		return m_curStats[stat] / m_stats[stat] * 100.0;
 	}
 
-	std::string DisplayEnergy()
+	float GetEnergyPercentage()
 	{
-		float percentage = m_curEnergy / m_maxEnergy * 10.0;
-		std::string output = "[         ]";
-		for (int i = 1; i < (int)percentage; i++)
-		{
-			output[i] = '=';
-		}
-		return output;
+		return m_curEnergy / m_maxEnergy * 100.0;
 	}
 
 	bool UltReady()

@@ -102,16 +102,18 @@ void Battle::MainBattle()
 					break;
 				case '\n':
 				{
-					if ((curCh->UltReady() && m_curActionSelection==(int)CHARACTER_ACTION::ULTIMATE) || (m_curActionSelection< (int)CHARACTER_ACTION::ULTIMATE))
+					if ((!curCh->UltReady() && m_curActionSelection == (int)CHARACTER_ACTION::ULTIMATE))
 					{
-						// only when ult is ready can you pick ult
-						selectionMade = true;
-						break;
+						LOG_MSG("Ult energy not full yet!", 90);
+					}
+					else if (m_pTeam->m_curSkillPoints == 0 && m_curActionSelection == (int)CHARACTER_ACTION::SKILL)
+					{
+						LOG_MSG("Not enough skill point!", 90);
 					}
 					else
 					{
-						// log: ult energy not full yet!
-						LOG_MSG("Ult energy not full yet!", 90);
+						selectionMade = true;
+						break;
 					}
 				}
 				}
