@@ -21,7 +21,7 @@ void UpdateDrawing()
 {
 	while (true) 
 	{
-		ui.DrawScreen(&battle);
+		ui.DrawScreen();
 		std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep for 16ms -> 60Hz refresh rate :)
 	}
 }
@@ -38,6 +38,9 @@ int main()
 
 	// Create a 3 turn battle
 	battle.InitBattle(pMyTeam, 3);
+	ui.RegisterBattle(&battle);
+	ui.PlaceAnimatedObjects();
+
 	std::thread t(UpdateDrawing);
 	t.detach();
 	battle.MainBattle();

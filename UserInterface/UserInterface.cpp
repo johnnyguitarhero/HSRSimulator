@@ -4,7 +4,7 @@
 * @brief Draw battle scene using curses
 * TODO: The draw screen function is not thread safe at all!!!
 */
-void UserInterface::DrawScreen(Battle* battle)
+void UserInterface::DrawScreen()
 {
 	clear();
 	getmaxyx(stdscr, m_height, m_width);
@@ -13,34 +13,41 @@ void UserInterface::DrawScreen(Battle* battle)
 	curs_set(0);
 
 	// Draw borders
-	for (int i = 0; i < m_height; i++) {
+	for (int i = 0; i < m_height; i++) 
+	{
 		mvprintw(i, 0, "|");
 		mvprintw(i, m_width - 1, "|");
 	}
-	for (int i = 0; i < m_width; i++) {
+	for (int i = 0; i < m_width; i++) 
+	{
 		mvprintw(0, i, "-");
 		mvprintw(m_height - 1, i, "-");
 	}
 
-	DisplayBattleInfo(battle);
+	DisplayBattleInfo();
 	DisplayMessages();
+
+	for (int i = 0; i < m_battle->m_pTeam->m_curTeamSize; i++)
+	{
+		m_animatedCharacters[i]->Render();
+	}
 	
 	refresh();
 }
 
-void UserInterface::DisplayBattleInfo(Battle* battle)
+void UserInterface::DisplayBattleInfo()
 {
 	// Draw action queue
 	mvprintw(1, 2, "------------");
-	for (int i = 0; i < battle->m_actionQueue.size(); i++)
+	for (int i = 0; i < m_battle->m_actionQueue.size(); i++)
 	{
-		if (battle->m_actionQueue[i]->m_name == "TurnCounter")
+		if (m_battle->m_actionQueue[i]->m_name == "TurnCounter")
 		{
-			mvprintw(2 + 2 * i, 2, "|%10d|", battle->m_turn);
+			mvprintw(2 + 2 * i, 2, "|%10d|", m_battle->m_turn);
 		}
 		else
 		{
-			mvprintw(2 + 2 * i, 2, "|%10s|", battle->m_actionQueue[i]->m_name.c_str());
+			mvprintw(2 + 2 * i, 2, "|%10s|", m_battle->m_actionQueue[i]->m_name.c_str());
 		}
 
 		mvprintw(3 + 2 * i, 2, "------------");
@@ -51,7 +58,7 @@ void UserInterface::DisplayBattleInfo(Battle* battle)
 	std::vector<std::string> actions = { "Basic Attack", "Skill", "Ultimate" };
 	for (int i = 0; i < 3; i++)
 	{
-		if (i == battle->m_curActionSelection)
+		if (i == m_battle->m_curActionSelection)
 		{
 			mvprintw(m_height - 20 + i, 90, "> %s <", actions[i].c_str());
 		}
@@ -65,9 +72,9 @@ void UserInterface::DisplayBattleInfo(Battle* battle)
 	// Draw skill points
 	mvprintw(m_height - 15, 90, "Skill Points:");
 	std::string skillPoints = "";
-	for (int i = 0; i < battle->m_pTeam->m_maxSkillPoints; i++)
+	for (int i = 0; i < m_battle->m_pTeam->m_maxSkillPoints; i++)
 	{
-		if (i < battle->m_pTeam->m_curSkillPoints)
+		if (i < m_battle->m_pTeam->m_curSkillPoints)
 		{
 			skillPoints += (char)216;
 		}
@@ -82,29 +89,29 @@ void UserInterface::DisplayBattleInfo(Battle* battle)
 	mvprintw((m_height - 5) / 3 - 1, (m_width - 15) / 3, "/-^-\\");
 	mvprintw((m_height - 5) / 3, (m_width - 15) / 3 + 2, "Enemy");
 
-	// Draw Characters
-	for (int i = 0; i < battle->m_pTeam->m_curTeamSize; i++)
+	// Draw character stats
+	for (int i = 0; i < m_battle->m_pTeam->m_curTeamSize; i++)
 	{
 		// Draw Names/Pictures
-		if (battle->m_pTeam->m_pCharacters[i]->IsTarget()) attron(COLOR_PAIR(2));
-		if (dynamic_cast<Character*>(battle->m_actionQueue[0]) == battle->m_pTeam->m_pCharacters[i])
+		if (m_battle->m_pTeam->m_pCharacters[i]->IsTarget()) attron(COLOR_PAIR(2));
+		if (dynamic_cast<Character*>(m_battle->m_actionQueue[0]) == m_battle->m_pTeam->m_pCharacters[i])
 		{
-			mvprintw(m_height - 3, 2 + i * 25, "[%s]", battle->m_pTeam->m_pCharacters[i]->m_name.c_str());
+			mvprintw(m_height - 3, 2 + i * 25, "[%s]", m_battle->m_pTeam->m_pCharacters[i]->m_name.c_str());
 		}
 		else
 		{
-			mvprintw(m_height - 3, 2 + i * 25, " %s ", battle->m_pTeam->m_pCharacters[i]->m_name.c_str());
+			mvprintw(m_height - 3, 2 + i * 25, " %s ", m_battle->m_pTeam->m_pCharacters[i]->m_name.c_str());
 		}
-		if (battle->m_pTeam->m_pCharacters[i]->IsTarget()) attroff(COLOR_PAIR(2));
+		if (m_battle->m_pTeam->m_pCharacters[i]->IsTarget()) attroff(COLOR_PAIR(2));
 
 		// Draw HP
-		mvprintw(m_height - 4, 6 + i * 25, "%s", ("HP: " + GenPercentageBar(battle->m_pTeam->m_pCharacters[i]->GetStatsPercentage(CHARACTER_STATS::HP))).c_str());
+		mvprintw(m_height - 4, 6 + i * 25, "%s", ("HP: " + GenPercentageBar(m_battle->m_pTeam->m_pCharacters[i]->GetStatsPercentage(CHARACTER_STATS::HP))).c_str());
 
 
 		// Draw Energy
-		int colorCode = (int)battle->m_pTeam->m_pCharacters[i]->GetElementType() + 1;
+		int colorCode = (int)m_battle->m_pTeam->m_pCharacters[i]->GetElementType() + 1;
 		attron(COLOR_PAIR(colorCode));
-		mvprintw(m_height - 5, 2 + i * 25, "%s", ("Energy: " + GenPercentageBar(battle->m_pTeam->m_pCharacters[i]->GetEnergyPercentage())).c_str());
+		mvprintw(m_height - 5, 2 + i * 25, "%s", ("Energy: " + GenPercentageBar(m_battle->m_pTeam->m_pCharacters[i]->GetEnergyPercentage())).c_str());
 		attroff(COLOR_PAIR(colorCode));
 
 	}

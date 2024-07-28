@@ -5,6 +5,7 @@
 #include "WindowsAPI.hpp"
 #include "Battle.hpp"
 #include "Logger.hpp"
+#include "AnimatedCharacter.hpp"
 
 class UserInterface
 {
@@ -30,6 +31,23 @@ public:
 		init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
 		init_pair(6, COLOR_YELLOW, COLOR_BLACK);
 		init_pair(7, COLOR_WHITE, COLOR_BLACK);
+
+	}
+
+	void RegisterBattle(Battle* battle)
+	{
+		m_battle = battle;	
+	}
+
+	void PlaceAnimatedObjects()
+	{
+		// Characters
+		for (int i = 0; i < m_battle->m_pTeam->m_pCharacters.size(); i++)
+		{
+			AnimatedCharacter* curAnimatedCharacter = new AnimatedCharacter(m_battle->m_pTeam->m_pCharacters[i]->m_idleAnimation, 20, 10 + i * 25);
+			m_animatedCharacters.push_back(curAnimatedCharacter);
+			m_battle->m_pTeam->m_pCharacters[i]->RegisterAnimation(curAnimatedCharacter);
+		}
 	}
 
 	void CloseUI()
@@ -37,15 +55,17 @@ public:
 		endwin();
 	}
 
-	void DrawScreen(Battle* battle);
+	void DrawScreen();
 
 private:
+	Battle* m_battle;
+	std::vector<AnimatedCharacter*> m_animatedCharacters;
 
 	int m_height;
 	int m_width;
 
 	void DisplayMessages();
-	void DisplayBattleInfo(Battle* battle);
+	void DisplayBattleInfo();
 
 	std::string GenPercentageBar(float percent)
 	{

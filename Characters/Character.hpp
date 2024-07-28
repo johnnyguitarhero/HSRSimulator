@@ -4,6 +4,7 @@
 #include <queue>
 #include "MobileEntity.hpp"
 #include "CharacterEnums.hpp"
+#include "AnimatedCharacter.hpp"
 
 #define PRE_TURN true
 #define POST_TURN false
@@ -39,6 +40,8 @@ public:
 		m_targeted = false;
 	}
 	~Character(){}
+
+	static const std::vector<std::vector<std::string>> m_idleAnimation;
 
 	virtual void UseBasicAtk()
 	{
@@ -120,7 +123,14 @@ public:
 		return m_ultReady;
 	}
 
+	void RegisterAnimation(AnimatedCharacter* animatedCharacter)
+	{
+		m_pAnimation = animatedCharacter;
+	}
+
 	void BuffEvents(bool curTime);
+
+	AnimatedCharacter* m_pAnimation;
 
 protected:
 	std::vector<float> m_curStats; // Current character stats
