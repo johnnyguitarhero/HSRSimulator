@@ -5,7 +5,8 @@
 class Idle : public Animation
 {
 public:
-	Idle(const std::vector<std::vector<std::string>>& frameData, int row, int col): Animation(frameData)
+	Idle(const std::vector<std::vector<std::string>>& frameData, int row, int col)
+		: Animation(frameData, true)
 	{
 		m_startRow = row;
 		m_startCol = col;
@@ -13,6 +14,8 @@ public:
 	~Idle(){}
 
 	void RenderFrame();
+	void OnEntry() {}
+	void OnExit() {}
 
 private:
 	int m_startRow;

@@ -116,6 +116,7 @@
     <ClCompile Include="HSRSimulation.cpp" />
     <ClCompile Include="OS\WindowsAPI.cpp" />
     <ClCompile Include="UserInterface\Animation\Idle.cpp" />
+    <ClCompile Include="UserInterface\Animation\LinearMotion.cpp" />
     <ClCompile Include="UserInterface\UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +136,8 @@
     <ClInclude Include="UserInterface\Animation\Animation.hpp" />
     <ClInclude Include="UserInterface\Animation\Freeze.hpp" />
     <ClInclude Include="UserInterface\Animation\Idle.hpp" />
+    <ClInclude Include="UserInterface\Animation\LinearMotion.hpp" />
+    <ClInclude Include="UserInterface\Animation\TextHighlight.hpp" />
     <ClInclude Include="UserInterface\Logger.hpp" />
     <ClInclude Include="UserInterface\UserInterface.hpp" />
     <ClInclude Include="Utils\ThreadSafeQueue.hpp" />

@@ -83,7 +83,7 @@ void Battle::MainBattle()
 		{
 			// If it's characters
 			Character* curCh = dynamic_cast<Character*>(currentMobileEntity);
-			curCh->m_pAnimation->SetNextState((unsigned)CHARACTER_ANIMATION_STATES::IDLE);
+			while (!curCh->m_pAnimation->SetNextState((unsigned)CHARACTER_ANIMATION_STATES::IDLE)) {};
 			LOG_MSG("It's "+curCh->m_name+"'s turn", -1);
 			curCh->BuffEvents(PRE_TURN);
 
@@ -179,6 +179,7 @@ void Battle::MainBattle()
 						curCh->AddTarget(m_pTeam->m_pCharacters[m_curTargetSelection]);
 						m_pTeam->ClearTargetStatus();
 						selectionMade = true;
+						while (!curCh->m_pAnimation->SetNextState((unsigned)m_curTargetSelection+6)) {};
 						break;
 					}
 					}
@@ -203,7 +204,7 @@ void Battle::MainBattle()
 			}
 
 			curCh->BuffEvents(POST_TURN);
-			curCh->m_pAnimation->SetNextState((unsigned)CHARACTER_ANIMATION_STATES::FREEZE);
+			while (!curCh->m_pAnimation->SetNextState((unsigned)CHARACTER_ANIMATION_STATES::FREEZE)) {};
 		}
 
 		// Current mobile entity resets to the starting point

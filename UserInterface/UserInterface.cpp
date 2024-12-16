@@ -39,7 +39,11 @@ void UserInterface::DisplayBattleInfo()
 {
 	// Draw action queue
 	mvprintw(1, 2, "------------");
-	for (int i = 0; i < m_battle->m_actionQueue.size(); i++)
+	m_pActionQueueTop->SetText(m_battle->m_actionQueue[0]->m_name, "|%10s|");
+	m_pActionQueueTop->RenderFrame();
+	mvprintw(3, 2, "------------");
+
+	for (int i = 1; i < m_battle->m_actionQueue.size(); i++)
 	{
 		if (m_battle->m_actionQueue[i]->m_name == "TurnCounter")
 		{

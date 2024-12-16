@@ -6,6 +6,7 @@
 #include "Battle.hpp"
 #include "Logger.hpp"
 #include "AnimatedCharacter.hpp"
+#include "TextHighlight.hpp"
 
 class UserInterface
 {
@@ -48,6 +49,46 @@ public:
 			m_animatedCharacters.push_back(curAnimatedCharacter);
 			m_battle->m_pTeam->m_pCharacters[i]->RegisterAnimation(curAnimatedCharacter);
 		}
+
+		// Enemy-Character interaction
+		for (int i = 0; i < m_battle->m_pTeam->m_pCharacters.size(); i++)
+		{
+			for (int j = 0; j < 4; j++) //To do - add enemies
+			{
+				std::vector<std::vector<float>> trajectory = { {20.0f, 10.0f + i * 25.0f},
+															   {10.0f, 10.0f + j * 25.0f},
+															   {20.0f, 10.0f + i * 25.0f} };
+				m_battle->m_pTeam->m_pCharacters[i]->m_pAnimation->AddInteraction(trajectory, 8.0f);
+			}
+		}
+
+		// Character-Character interaction
+		for (int i = 0; i < m_battle->m_pTeam->m_pCharacters.size(); i++)
+		{
+			for (int j = 0; j < m_battle->m_pTeam->m_pCharacters.size(); j++)
+			{
+				if (i == j)
+				{
+					std::vector<std::vector<float>> trajectory = { {20.0f, 10.0f + i * 25.0f},
+																   {20.0f, 5.0f + i * 25.0f},
+																   {20.0f, 15.0f + i * 25.0f},
+																   {20.0f, 10.0f + i * 25.0f} };
+					m_battle->m_pTeam->m_pCharacters[i]->m_pAnimation->AddInteraction(trajectory, 8.0f);
+				}
+				else
+				{
+					std::vector<std::vector<float>> trajectory = { {20.0f, 10.0f + i * 25.0f},
+																   {15.0f, 35.0f},
+																   {20.0f, 10.0f + j * 25.0f},
+																   {15.0f, 35.0f}, 
+																   {20.0f, 10.0f + i * 25.0f} };												 
+					m_battle->m_pTeam->m_pCharacters[i]->m_pAnimation->AddInteraction(trajectory, 8.0f);
+				}
+			}
+		}
+
+		// Texts
+		m_pActionQueueTop = new TextHighlight(2, 2);
 	}
 
 	void CloseUI()
@@ -59,7 +100,10 @@ public:
 
 private:
 	Battle* m_battle;
+
+	// Animations
 	std::vector<AnimatedCharacter*> m_animatedCharacters;
+	TextHighlight* m_pActionQueueTop;
 
 	int m_height;
 	int m_width;

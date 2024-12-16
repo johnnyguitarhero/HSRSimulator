@@ -5,7 +5,7 @@
 class Freeze : public Animation
 {
 public:
-	Freeze(const std::vector<std::vector<std::string>>& frameData, int row, int col) : Animation(frameData)
+	Freeze(const std::vector<std::vector<std::string>>& frameData, int row, int col) : Animation(frameData, true)
 	{
 		m_startRow = row;
 		m_startCol = col;
@@ -19,6 +19,9 @@ public:
 			mvprintw(m_startRow + row, m_startCol, m_frameData[0][row].c_str());
 		}
 	}
+
+	void OnEntry(){}
+	void OnExit(){}
 
 private:
 	int m_startRow;
