@@ -25,7 +25,8 @@ public:
 
 		for (int i = 0; i < m_pTargetList.size(); i++)
 		{
-			m_pTargetList[i]->AddBuff(CHARACTER_STATS::SPD, 10.0f, 2, PRE_TURN);
+			Character* pCharacter = dynamic_cast<Character*>(m_pTargetList[i]);
+			pCharacter->AddBuff(CHARACTER_STATS::SPD, 10.0f, 2, PRE_TURN);
 		}
 
 		m_pTargetList.clear();

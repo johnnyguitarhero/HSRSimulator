@@ -43,7 +43,7 @@ public:
 	void PlaceAnimatedObjects()
 	{
 		// Characters
-		for (int i = 0; i < m_battle->m_pTeam->m_pCharacters.size(); i++)
+		for (int i = 0; i < m_battle->m_pTeam->m_curTeamSize; i++)
 		{
 			AnimatedCharacter* curAnimatedCharacter = new AnimatedCharacter(m_battle->m_pTeam->m_pCharacters[i]->m_idleAnimation, 20, 10 + i * 25);
 			m_animatedCharacters.push_back(curAnimatedCharacter);
@@ -51,21 +51,21 @@ public:
 		}
 
 		// Enemy-Character interaction
-		for (int i = 0; i < m_battle->m_pTeam->m_pCharacters.size(); i++)
+		for (int i = 0; i < m_battle->m_pTeam->m_curTeamSize; i++)
 		{
-			for (int j = 0; j < 4; j++) //To do - add enemies
+			for (int j = 0; j < m_battle->m_pEnemyTeam->m_curTeamSize; j++) //To do - add enemies
 			{
 				std::vector<std::vector<float>> trajectory = { {20.0f, 10.0f + i * 25.0f},
-															   {10.0f, 10.0f + j * 25.0f},
+															   {10.0f, 18.0f + j * 15.0f},
 															   {20.0f, 10.0f + i * 25.0f} };
 				m_battle->m_pTeam->m_pCharacters[i]->m_pAnimation->AddInteraction(trajectory, 8.0f);
 			}
 		}
 
 		// Character-Character interaction
-		for (int i = 0; i < m_battle->m_pTeam->m_pCharacters.size(); i++)
+		for (int i = 0; i < m_battle->m_pTeam->m_curTeamSize; i++)
 		{
-			for (int j = 0; j < m_battle->m_pTeam->m_pCharacters.size(); j++)
+			for (int j = 0; j < m_battle->m_pTeam->m_curTeamSize; j++)
 			{
 				if (i == j)
 				{

@@ -43,7 +43,7 @@ void UserInterface::DisplayBattleInfo()
 	m_pActionQueueTop->RenderFrame();
 	mvprintw(3, 2, "------------");
 
-	for (int i = 1; i < m_battle->m_actionQueue.size(); i++)
+	for (int i = 1; i < 6; i++) // at most draw 6 only
 	{
 		if (m_battle->m_actionQueue[i]->m_name == "TurnCounter")
 		{
@@ -90,8 +90,14 @@ void UserInterface::DisplayBattleInfo()
 	mvprintw(m_height - 14, 90, skillPoints.c_str());
 
 	// Draw enemy
-	mvprintw((m_height - 5) / 3 - 1, (m_width - 15) / 3, "/-^-\\");
-	mvprintw((m_height - 5) / 3, (m_width - 15) / 3 + 2, "Enemy");
+	for (int i = 0; i < m_battle->m_pEnemyTeam->m_curTeamSize; i++)
+	{
+		mvprintw(8, 18 + i * 15, "/-^-\\");
+		// Draw Names/Pictures
+		if (m_battle->m_pEnemyTeam->m_pEnemies[i]->IsTarget()) attron(COLOR_PAIR(2));
+		mvprintw(9, 18 + i * 15, "Enemy");
+		if (m_battle->m_pEnemyTeam->m_pEnemies[i]->IsTarget()) attroff(COLOR_PAIR(2));
+	}
 
 	// Draw character stats
 	for (int i = 0; i < m_battle->m_pTeam->m_curTeamSize; i++)

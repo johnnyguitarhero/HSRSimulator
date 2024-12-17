@@ -5,3 +5,5 @@
 #include "Seele.hpp"
 #include "Sparkle.hpp"
 #include "Huohuo.hpp"
+
+#include "Vagrant.hpp"

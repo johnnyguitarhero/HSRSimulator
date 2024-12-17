@@ -1,3 +1,5 @@
+#include <typeinfo>
+
 #include "Battle.hpp"
 #include "Logger.hpp"
 
@@ -23,12 +25,14 @@ Battle::~Battle()
 * This function initialized a battle with given turn number.
 *
 * @param[in] pTeam: pointer to the team object
+* @param[in] pEnemyTeam: pointer to the enemy team object
 * @param[in] turn: number of turns allowed in the battle
 * 
 */
-void Battle::InitBattle(Team* pTeam, int turn)
+void Battle::InitBattle(Team* pTeam, EnemyTeam* pEnemyTeam, int turn)
 {
 	m_pTeam = pTeam;
+	m_pEnemyTeam = pEnemyTeam;
 	m_turn = turn;
 
 	// Add turn counter to the battle
@@ -42,6 +46,10 @@ void Battle::InitBattle(Team* pTeam, int turn)
 	}
 
 	// TODO: Add enemies to the battle
+	for (int i = 0; i < m_pEnemyTeam->m_curTeamSize; i++)
+	{
+		m_actionQueue.push_back(m_pEnemyTeam->m_pEnemies[i]);
+	}
 
 }
 
@@ -79,7 +87,11 @@ void Battle::MainBattle()
 			dynamic_cast<TurnCounter*>(currentMobileEntity)->ResetCounter();
 			m_turn--;
 		}
-		else
+		else if (dynamic_cast<Enemy*>(currentMobileEntity))
+		{
+			// If it's enemy
+		}
+		else if (dynamic_cast<Character*>(currentMobileEntity))
 		{
 			// If it's characters
 			Character* curCh = dynamic_cast<Character*>(currentMobileEntity);
@@ -125,7 +137,46 @@ void Battle::MainBattle()
 			m_curTargetSelection = 0;
 			selectionMade = false;
 
-			if (m_curTargetType == (int)TARGET_TYPE::AOE_ENEMY)
+			if (m_curTargetType == (int)TARGET_TYPE::SINGLE_ENEMY)
+			{
+				m_pEnemyTeam->m_pEnemies[m_curTargetSelection]->SelectedAsTarget(true);
+				while (!selectionMade)
+				{
+					int key = getch();
+					switch (key)
+					{
+					case KEY_RIGHT:
+					{
+						m_curTargetSelection = (m_curTargetSelection + 1) % m_pEnemyTeam->m_curTeamSize;
+						for (int i = 0; i < m_pEnemyTeam->m_curTeamSize; i++)
+						{
+							m_pEnemyTeam->m_pEnemies[i]->SelectedAsTarget(false);
+						}
+						m_pEnemyTeam->m_pEnemies[m_curTargetSelection]->SelectedAsTarget(true);
+						break;
+					}
+					case KEY_LEFT:
+					{
+						m_curTargetSelection = (m_curTargetSelection - 1 + m_pEnemyTeam->m_curTeamSize) % m_pEnemyTeam->m_curTeamSize;
+						for (int i = 0; i < m_pEnemyTeam->m_curTeamSize; i++)
+						{
+							m_pEnemyTeam->m_pEnemies[i]->SelectedAsTarget(false);
+						}
+						m_pEnemyTeam->m_pEnemies[m_curTargetSelection]->SelectedAsTarget(true);
+						break;
+					}
+					case '\n':
+					{
+						curCh->AddTarget(m_pEnemyTeam->m_pEnemies[m_curTargetSelection]);
+						m_pEnemyTeam->ClearTargetStatus();
+						selectionMade = true;
+						while (!curCh->m_pAnimation->SetNextState((unsigned)m_curTargetSelection + 2)) {};
+						break;
+					}
+					}
+				}
+			}
+			else if (m_curTargetType == (int)TARGET_TYPE::AOE_ENEMY)
 			{
 				//curCh->AddTarget
 			}
@@ -179,7 +230,7 @@ void Battle::MainBattle()
 						curCh->AddTarget(m_pTeam->m_pCharacters[m_curTargetSelection]);
 						m_pTeam->ClearTargetStatus();
 						selectionMade = true;
-						while (!curCh->m_pAnimation->SetNextState((unsigned)m_curTargetSelection+6)) {};
+						while (!curCh->m_pAnimation->SetNextState((unsigned)m_curTargetSelection+7)) {}; // I don't like this +7...
 						break;
 					}
 					}

@@ -1,0 +1,23 @@
+#pragma once
+
+// Generic Enemy Stats
+enum ENEMY_STATS
+{
+	ENEMY_HP,
+	ENEMY_TOUGHNESS,
+	ENEMY_ATK,
+	ENEMY_DEF,
+	ENEMY_SPD,
+	NUM_ENEMY_STATS
+};
+
+
+
+// Enemy actions
+enum ENEMY_ACTION
+{
+	ENEMY_BASIC_ATTACK = 0,
+	ENEMY_SKILL,
+	ENEMY_ULTIMATE,
+	NUM_ENEMY_ACTION_TYPE
+};

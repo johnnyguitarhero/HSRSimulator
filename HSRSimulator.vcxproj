@@ -70,7 +70,7 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)lib;$(ProjectDir)Characters/Seele;$(ProjectDir)Characters/Sparkle;$(ProjectDir)Characters/Huohuo;$(ProjectDir)Characters;$(ProjectDir)Framework;$(ProjectDir);$(ProjectDir)UserInterface;$(ProjectDir)Utils;$(ProjectDir)OS;$(ProjectDir)UserInterface/Animation;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)lib;$(ProjectDir)Characters/Seele;$(ProjectDir)Characters/Sparkle;$(ProjectDir)Characters/Huohuo;$(ProjectDir)Characters;$(ProjectDir)Enemies;$(ProjectDir)Framework;$(ProjectDir);$(ProjectDir)UserInterface;$(ProjectDir)Utils;$(ProjectDir)OS;$(ProjectDir)UserInterface/Animation;$(IncludePath)</IncludePath>
     <OutDir>build\$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(ProjectDir)lib;$(LibraryPath)</LibraryPath>
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
@@ -128,6 +128,10 @@
     <ClInclude Include="characters\seele\Seele.hpp" />
     <ClInclude Include="characters\sparkle\Sparkle.hpp" />
     <ClInclude Include="Characters\Team.hpp" />
+    <ClInclude Include="Enemies\Vagrant.hpp" />
+    <ClInclude Include="Enemies\Enemy.hpp" />
+    <ClInclude Include="Enemies\EnemyEnums.hpp" />
+    <ClInclude Include="Enemies\EnemyTeam.hpp" />
     <ClInclude Include="framework\MobileEntity.hpp" />
     <ClInclude Include="framework\TurnCounter.hpp" />
     <ClInclude Include="OS\WindowsAPI.hpp" />

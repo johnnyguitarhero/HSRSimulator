@@ -19,12 +19,11 @@ public:
 	{
 		for (int i = 0; i < m_pTargetList.size(); i++)
 		{
-			m_pTargetList[i]->m_remainTime = std::max(0.0f, m_pTargetList[i]->m_remainTime - 50.0f);
-			m_pTargetList[i]->m_distance = std::max(0.0f, m_pTargetList[i]->m_distance - 50.0f * m_pTargetList[i]->cur_speed);
-			m_pTargetList[i]->AddBuff(CHARACTER_STATS::CRIT_DMG, this->m_curStats[CHARACTER_STATS::CRIT_DMG] * 0.24f + 45.0f, 2, PRE_TURN);
+			Character* pCharacter = dynamic_cast<Character*>(m_pTargetList[i]);
+			pCharacter->m_remainTime = std::max(0.0f, pCharacter->m_remainTime - 50.0f);
+			pCharacter->m_distance = std::max(0.0f, pCharacter->m_distance - 50.0f * pCharacter->cur_speed);
+			pCharacter->AddBuff(CHARACTER_STATS::CRIT_DMG, this->m_curStats[CHARACTER_STATS::CRIT_DMG] * 0.24f + 45.0f, 2, PRE_TURN);
 		}
-
-		m_pTargetList.clear();
 
 		Character::UseSkill();
 	}

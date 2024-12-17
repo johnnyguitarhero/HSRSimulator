@@ -36,8 +36,16 @@ int main()
 	pMyTeam->AddCharacter(new Seele());
 	pMyTeam->AddCharacter(new Sparkle());
 
+	// Add enemies to the team
+	EnemyTeam* pEnemyTeam = new EnemyTeam();
+	pEnemyTeam->AddEnemy(new Vagrant());
+	pEnemyTeam->AddEnemy(new Vagrant());
+	pEnemyTeam->AddEnemy(new Vagrant());
+	pEnemyTeam->AddEnemy(new Vagrant());
+	pEnemyTeam->AddEnemy(new Vagrant());
+
 	// Create a 3 turn battle
-	battle.InitBattle(pMyTeam, 3);
+	battle.InitBattle(pMyTeam, pEnemyTeam, 3);
 	ui.RegisterBattle(&battle);
 	ui.PlaceAnimatedObjects();
 
